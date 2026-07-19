@@ -24,12 +24,15 @@ jobs:
       - name: Build Web Assets
         run: npm run build
 
-      - name: Sync Capacitor Project
-        run: npx cap sync ios
+      - name: Sync & Update Capacitor iOS
+        run: |
+          npx cap ios sync
+          npx cap ios update
 
       - name: Install CocoaPods
         run: |
           cd ios/App
+          pod repo update
           pod install
 
       - name: Build Xcode Project
