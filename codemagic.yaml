@@ -1,0 +1,29 @@
+workflows:
+  ios-workflow:
+    name: iOS Build Workflow
+    max_build_duration: 60
+    instance_type: mac_mini_m1
+    environment:
+      ios_signing:
+        distribution_type: app_store # قم بتغييرها إلى ad_hoc إذا كنت تريد التجربة على جهازك الشخصي فقط أولاً
+        bundle_identifier: com.clicktech.straitguard
+      vars:
+        XCODE_WORKSPACE: "ios/App/App.xcworkspace"
+        XCODE_SCHEME: "App"
+      xcode: latest
+      cocoapods: default
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: 'main'
+    scripts:
+      - name: Install dependencies
+        script: |
+          npm install
+      - name: Building iOS Project
+        script: |
+          xcodebuild build -workspace "$XCODE_WORKSPACE" -scheme "$XCODE_SCHEME" -CODE_SIGN_IDENTITY="" -CODE_SIGNING_REQUIRED=NO -sdk iphoneos
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /Users/builder/Library/Developer/Xcode/DerivedData/**/Build/Products/**/*.ipa
