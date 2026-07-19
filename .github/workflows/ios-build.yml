@@ -29,23 +29,23 @@ jobs:
           npx cap sync ios
           npx cap update ios
 
-      - name: Install CocoaPods
+      - name: Show iOS Project
         run: |
-          cd ios/App
-          pod install
+          ls -la ios
+          ls -la ios/App
 
       - name: Build Xcode Project
         run: |
           xcodebuild build \
-            -workspace ios/App/App.xcworkspace \
+            -project ios/App/App.xcodeproj \
             -scheme App \
             -configuration Debug \
             -sdk iphoneos \
-            -CODE_SIGN_IDENTITY="" \
-            -CODE_SIGNING_REQUIRED=NO
+            CODE_SIGNING_ALLOWED=NO
 
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: ios-build-output
-          path: /Users/runner/Library/Developer/Xcode/DerivedData/**/Build/Products/**/*.app
+          path: |
+            /Users/runner/Library/Developer/Xcode/DerivedData/**/Build/Products/**/*.app
